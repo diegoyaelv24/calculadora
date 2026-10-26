@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="assets/styles_calculadora.css"></head>
+<body>
+
+    <div class="calculadora">
+        <div class="head">
+            <div id="calculadora_data" class="calculadora_data">0</div>
+        </div>
+        
+        <div class="body">
+            <button class="btn-op" onclick="limpiar()">C</button>
+            <button class="btn-op" onclick="borrarEntrada()">CE</button>
+            <button class="btn-op" onclick="setOperation('/')">/</button>
+            <button class="btn-op" onclick="setOperation('*')">*</button>
+            
+            <button class="btn-num" onclick="anadir_numero('7')">7</button>
+            <button class="btn-num" onclick="anadir_numero('8')">8</button>
+            <button class="btn-num" onclick="anadir_numero('9')">9</button>
+            <button class="btn-op" onclick="setOperation('-')">-</button>
+            
+            <button class="btn-num" onclick="anadir_numero('4')">4</button>
+            <button class="btn-num" onclick="anadir_numero('5')">5</button>
+            <button class="btn-num" onclick="anadir_numero('6')">6</button>
+            <button class="btn-op" onclick="setOperation('+')">+</button>
+            
+            <button class="btn-num" onclick="anadir_numero('1')">1</button>
+            <button class="btn-num" onclick="anadir_numero('2')">2</button>
+            <button class="btn-num" onclick="anadir_numero('3')">3</button>
+            <button class="btn-op btn-equal" onclick="setOperation('=')">=</button>
+            
+            <button class="btn-num btn-zero" onclick="anadir_numero('0')">0</button>
+            <button class="btn-num" onclick="anadir_numero('.')">.</button>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    var num1 = null;
+    var num2 = null;
+    var ope = null;
+    var limpiarPantalla = false;
+
+    function limpiar() {
+        let data = document.getElementById("calculadora_data");
+        data.innerHTML = "0";
+        num1 = null;
+        num2 = null;
+        ope = null;
+        limpiarPantalla = false;
+    }
+
+    function borrarEntrada() {
+        let data = document.getElementById("calculadora_data");
+        if (data.innerHTML.length > 1) {
+            data.innerHTML = data.innerHTML.slice(0, -1);
+        } else {
+            data.innerHTML = "0";
+        }
+    }
+
+    function anadir_numero(value) {
+        let data = document.getElementById("calculadora_data");
+
+        if (limpiarPantalla) {
+            data.innerHTML = "";
+            limpiarPantalla = false;
+        }
+
+        if (value === '.') {
+            if (!data.innerHTML.includes('.')) {
+                data.innerHTML += value;
+            }
+            return;
+        }
+
+        if (data.innerHTML === "0" && value !== ".") {
+            data.innerHTML = value;
+        } else {
+            data.innerHTML += value;
+        }
+    }
+
+    function setOperation(operacion) {
+        let data = document.getElementById("calculadora_data");
+        let valorActual = parseFloat(data.innerHTML);
+
+        if (num1 === null) {
+            num1 = valorActual;
+        } else if (ope && !limpiarPantalla) {
+            num2 = valorActual;
+            num1 = calcular(num1, num2, ope);
+            data.innerHTML = num1;
+        }
+
+        if (operacion === '=') {
+            ope = null;
+            num1 = null;
+            limpiarPantalla = true;
+        } else {
+            ope = operacion;
+            limpiarPantalla = true;
+        }
+    }
+
+    function calcular(n1, n2, operador) {
+        switch (operador) {
+            case '+': return n1 + n2;
+            case '-': return n1 - n2;
+            case '*': return n1 * n2;
+            case '/': 
+                if (n2 === 0) return "Error";
+                return n1 / n2;
+            default: return n2;
+        }
+    }
+</script>
+</html>
